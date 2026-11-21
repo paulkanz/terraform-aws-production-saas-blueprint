@@ -1,0 +1,21 @@
+aws_region  = "us-west-2"
+environment = "prod"
+project     = "saas-platform"
+vpc_cidr    = "10.100.0.0/16"
+
+# Single NAT for staging/dev (cost savings); false for prod (multi-AZ)
+single_nat_gateway = false
+
+# Database Sizing (Aurora MySQL)
+database_instance_class = "db.r6g.large"
+database_instance_count = 2
+deletion_protection     = true
+
+# Redis Sizing (ElastiCache)
+redis_node_type = "cache.t4g.medium"
+
+# ECS Web & Worker Configuration
+container_image     = "123456789012.dkr.ecr.us-west-2.amazonaws.com/app-web:latest"
+container_port      = 80
+web_desired_count   = 4
+ssl_certificate_arn = "arn:aws:acm:us-west-2:123456789012:certificate/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"

@@ -1,0 +1,53 @@
+name: Deploy Production SaaS Platform to AWS ECS Fargate
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  id-token: write # Required for AWS OIDC authentication (NIST AC-2, CIS 1.16)
+  contents: read
+
+jobs:
+  deploy:
+    name: Build, Scan & Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials (OIDC - Keyless)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_DEPLOY_ROLE_ARN }}
+          aws-region: us-west-2
+          audience: sts.amazonaws.com
+
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and Push Docker Image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: app-web
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      - name: Deploy to Amazon ECS Service
+        run: |
+          aws ecs update-service \
+            --cluster saas-prod-cluster \
+            --service saas-prod-web-service \
+            --force-new-deployment
+
+      - name: Deploy Worker Service
+        run: |
+          aws ecs update-service \
+            --cluster saas-prod-cluster \
+            --service saas-prod-worker-service \
+            --force-new-deployment

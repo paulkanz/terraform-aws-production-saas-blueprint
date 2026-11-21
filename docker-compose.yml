@@ -1,0 +1,104 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      target: production
+    container_name: app-local-app
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+      - /var/www/html/vendor
+    environment:
+      APP_NAME: Production SaaS Platform
+      APP_ENV: local
+      APP_KEY: base64:dGVzdGtleWZvcmxvY2FsZGV2ZWxvcG1lbnRvbmx5ISE=
+      APP_DEBUG: "true"
+      APP_URL: http://localhost:8000
+      LOG_CHANNEL: stack
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: app_dev
+      DB_USERNAME: app_dev_user
+      DB_PASSWORD: devpassword
+      CACHE_DRIVER: redis
+      SESSION_DRIVER: redis
+      QUEUE_CONNECTION: redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      AWS_DEFAULT_REGION: us-west-2
+      AWS_BUCKET: app-local-documents
+      AWS_ENDPOINT: http://localstack:4566
+      AWS_USE_PATH_STYLE_ENDPOINT: "true"
+    depends_on:
+      - db
+      - redis
+      - localstack
+
+  queue-worker:
+    build:
+      context: .
+      target: production
+    container_name: app-local-worker
+    restart: unless-stopped
+    command: ["php", "artisan", "queue:work", "--tries=3", "--timeout=90"]
+    volumes:
+      - .:/var/www/html
+      - /var/www/html/vendor
+    environment:
+      APP_ENV: local
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: app_dev
+      DB_USERNAME: app_dev_user
+      DB_PASSWORD: devpassword
+      QUEUE_CONNECTION: redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: mysql:8.0
+    container_name: app-local-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: app_dev
+      MYSQL_USER: app_dev_user
+      MYSQL_PASSWORD: devpassword
+      MYSQL_ROOT_PASSWORD: rootdevpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  redis:
+    image: redis:7-alpine
+    container_name: app-local-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  localstack:
+    image: localstack/localstack:latest
+    container_name: app-local-s3
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=s3
+      - DEFAULT_REGION=us-west-2
+    volumes:
+      - localstack_data:/var/lib/localstack
+
+volumes:
+  db_data:
+  redis_data:
+  localstack_data:
