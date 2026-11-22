@@ -1,10 +1,10 @@
-# Production-Grade Modular AWS SaaS Cloud Platform (Terraform)
+# Modular AWS SaaS Cloud Platform (Terraform)
 
 [![Terraform](https://img.shields.io/badge/Terraform-v1.5+-623CE4.svg?logo=terraform)](https://www.terraform.io/)
 [![AWS Provider](https://img.shields.io/badge/AWS%20Provider-v5.0+-FF9900.svg?logo=amazon-aws)](https://registry.terraform.io/providers/hashicorp/aws/latest)
 [![Compliance](https://img.shields.io/badge/Compliance-NIST%20800--53%20%7C%20SOC%202%20%7C%20CIS-00C853.svg)](#compliance--security-controls-matrix)
 
-Production-grade, modular Infrastructure as Code (IaC) architecting a **Multi-Tier Enterprise SaaS Platform** on AWS, featuring **AWS ECS Fargate**, **Amazon Aurora MySQL Multi-AZ**, and **ElastiCache Redis**.
+Modular Infrastructure as Code (IaC) architecting an enterprise **Multi-Tier SaaS Platform** on AWS, featuring **AWS ECS Fargate**, **Amazon Aurora MySQL Multi-AZ**, and **ElastiCache Redis**.
 
 Built from the ground up to support **institutional enterprise governance**, **SOC 2 Type II**, **HITRUST CSF**, and **NIST SP 800-53 Rev 5** compliance baselines while empowering engineering teams with automated, self-service container deployments ("Golden Paths").
 

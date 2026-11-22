@@ -1,6 +1,6 @@
 # Enterprise SaaS Cloud Platform: System Design Document (SDD)
 
-> **Platform Architecture:** Production-Grade Modular AWS SaaS Infrastructure Blueprint  
+> **Platform Architecture:** Modular AWS SaaS Infrastructure Blueprint  
 > **Source Repository:** [`terraform-aws-production-saas-blueprint`](https://github.com/paulkanz/terraform-aws-production-saas-blueprint)  
 > **Compliance & Governance:** NIST SP 800-53 Rev 5, SOC 2 Type II, CIS AWS Foundations Benchmark v3.0, HITRUST CSF  
 > **Maintainer:** Paul Kanz (Staff Platform & Infrastructure Architect)  
@@ -9,7 +9,7 @@
 
 ## 1. Executive Summary & Architectural Vision
 
-This System Design Document specifies the architecture of a **production-grade, multi-tier enterprise SaaS platform** on Amazon Web Services (AWS), authored entirely in modular Terraform (HCL).
+This System Design Document specifies the architecture of an enterprise **multi-tier SaaS platform** on Amazon Web Services (AWS), authored entirely in modular Terraform (HCL).
 
 The architecture is engineered to execute a mission-critical **cloud modernization**: transitioning stateful, legacy compute workloads into a **serverless, auto-scaling, highly resilient, and compliance-hardened cloud ecosystem**.
 
